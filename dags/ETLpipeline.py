@@ -62,6 +62,7 @@ with DAG(
             'media_type': response.get('media_type','')  
         }
         return apod_data
+    
     ## step 4: Load the data into PostgresSQL
     @task
     def load_data_to_postgres(apod_data):
@@ -87,3 +88,14 @@ with DAG(
     ## step 5: Verify the data DBViewer (will help you to connect to any database)
 
     ## step 6: Define the task dependencies
+    ## Extract
+
+    create_table() >> extract_apod ## Ensure the table is created before extraction
+    api_response = extract_apod.output
+
+    ## Transform
+
+    transformed_data=  transform_apod_data(api_response)
+
+    ## Load
+    load_data_to_postgres(transformed_data)
