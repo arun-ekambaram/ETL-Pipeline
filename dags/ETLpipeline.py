@@ -52,7 +52,15 @@ with DAG(
   
     ## step 3: Transform the data(Pick the information that i need to save)
 
-  
+    @task
+    def transform_apod_data(response):
+        apod_data={
+            'title': response.get('title',''),
+            'explanation': response.get('explanation',''),
+            'url': response.get('url',''),
+            'date': response.get('date',''),
+            'media_type': response.get('media_type','')  
+        }
     ## step 4: Load the data into PostgresSQL
 
 
