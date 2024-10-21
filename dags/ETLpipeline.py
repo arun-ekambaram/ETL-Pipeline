@@ -63,6 +63,25 @@ with DAG(
         }
         return apod_data
     ## step 4: Load the data into PostgresSQL
+    @task
+    def load_data_to_postgres(apod_data):
+        ## initialize the postgreshook
+        postgres_hook = PostgresHook(postgres_conn_id='my_postgres_connection')
+        ## Define the sql insert query
+
+        insert_query = """
+        INSERT INTO apod_data (title, explanation, url, date, media_type)
+        VALUES (%s, %s, %s, %s, %s);
+        """
+
+        ## Execute SQL query
+        postgres_hook.run(insert_query, parameters=(
+            apod_data['title'],
+            apod_data['explanation'],
+            apod_data['url'],
+            apod_data['date'],
+            apod_data['media_type']
+        ))
 
 
     ## step 5: Verify the data DBViewer (will help you to connect to any database)
