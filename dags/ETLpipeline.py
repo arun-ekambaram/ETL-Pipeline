@@ -41,7 +41,14 @@ with DAG(
 
     ## step 2: Extract the NASA API Data(APOD) - Astronomy Picture of the day [Extract Pipleline]
     # https://api.nasa.gov/planetary/apod?api_key=HdXTz8iHZ7HGKYiyXazXkrwKnPOHQnhNCd1Tj3r7
-   
+    extract_apod=SimpleHttpOperator(
+        task_id = 'extract_apod',
+        http_conn_id = 'nasa_api', ## Connection ID defined in Airflow for NASA API
+        endpoint = 'planetary/apod', ## NASA API endpoint for Astronomy Picture of the day
+        method= 'GET',
+        data= {"api_key": "{{conn.nasa_api.extra_dejson.api_key}}"}, ## using the API key from the connection 
+        response_filter= lambda response: response.json(), ## Convert response to json
+    ) 
   
     ## step 3: Transform the data(Pick the information that i need to save)
 
