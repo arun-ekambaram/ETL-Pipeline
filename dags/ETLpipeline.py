@@ -61,6 +61,7 @@ with DAG(
             'date': response.get('date',''),
             'media_type': response.get('media_type','')  
         }
+        return apod_data
     ## step 4: Load the data into PostgresSQL
 
 
